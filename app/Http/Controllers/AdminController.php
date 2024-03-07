@@ -21,6 +21,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
+        //This middleware is important, DO NOT DELETE
         $this->middleware(['admin']);
     }
 
@@ -143,6 +144,7 @@ class AdminController extends Controller
         if ($id){
             $user = User::find($id);    
             $userData = User::All();
+
     
             return view('admin/userEdit')->with('user',$user)->with('userData',$userData);
         }else{
