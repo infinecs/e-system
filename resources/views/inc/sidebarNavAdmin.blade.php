@@ -68,7 +68,7 @@
                                                 </a>
                                             </li>
                                             <li class="nk-menu-item">
-                                                <a href="/admin/openPositions" class="nk-menu-link">
+                                                <a href="/admin/OpenPositions" class="nk-menu-link">
                                                 <span class="nk-menu-icon"><em class="icon ni ni-briefcase"></em></span>
                                                     <span class="nk-menu-text">Open Positions</span>
                                                 </a>

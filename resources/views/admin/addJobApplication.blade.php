@@ -1,5 +1,6 @@
 @extends('layout.appAdmin')
 @section('content')
+
 <div class="nk-content">
     <div class="container-fluid">
         <div class="nk-content-inner">
@@ -27,7 +28,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ route("applicationStore") }}" method="POST" enctype="multipart/form-data" id="jobApplicationForm">
+                        <form action="{{ route('applicationStore') }}" method="POST" enctype="multipart/form-data" id="jobApplicationForm">
 
 
                             @csrf
@@ -118,14 +119,14 @@
                                             
                                             <div class="col-sm-6">
                                             <div class="form-group text-center">
-    <label for="uploadResume" class="form-label">Applicant's Resume</label>
+    <label class="form-label">Applicant's Resume</label>
     <div class="form-control-wrap">
-        <div class="js-upload d-flex justify-content-center align-items-center" id="uploadResume" data-max-files="1">
+        <div class="js-upload d-flex justify-content-center align-items-center" id="UploadResume" data-max-files="1">
             <div class="dz-message" data-dz-message>
                 <div class="dz-message-icon"></div>
                 <span class="dz-message-text">Drag and drop file</span>
                 <div class="dz-message-btn mt-2">
-                    <input type="file" id="resumeFile" style="visibility: hidden; position: absolute;" name="UploadResume">
+                    <input type="file" style="visibility: hidden; position: absolute;" name="UploadResume">
                     <button type="button" class="btn btn-primary mt-2" id="uploadButton">Upload</button>
                 </div>
             </div>
@@ -134,7 +135,7 @@
 </div>
 
 </div>
-<div class="form-note mt-3">Please add your resume. Only PDF files are accepted.</div>
+<div class="form-note mt-3" >Please add your resume. Only PDF files are accepted.</div>
 </div>
 
 </div>
@@ -162,6 +163,9 @@
 </div>
 </div>
 </div>
+
+
+
 @endsection
 
 

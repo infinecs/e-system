@@ -16,6 +16,7 @@ use App\Models\Status;
 use App\Models\category;
 use Illuminate\Support\Facades\DB;
 use App\Models\jobapplication;
+use App\Models\OpenPositions;
 Use Alert;
 
 class AdminController extends Controller
@@ -273,6 +274,137 @@ class AdminController extends Controller
 
     }
 
+    public function OpenPositions()
+{
+    $user = Auth::user(); // Fetch authenticated user
+    $OpenPositions = OpenPositions::all(); // Fetch all open positions
+    return view('admin/OpenPositions', ['OpenPositions' => $OpenPositions, 'user' => $user]);
+}
+
+
+public function addOpenPositions()
+{
+    $user = Auth::user(); // Fetch authenticated user
+    $OpenPositions = OpenPositions::all(); // Fetch all open positions
+    return view('admin/addOpenPositions', ['OpenPositions' => $OpenPositions, 'user' => $user]);
+}
+
+
+public function PositionsStore(Request $request)
+{
+    // Validate the incoming request data
+    $validatedData = $request->validate([
+        'position_name' => 'required|string|max:255',
+        'job_description' => 'required|string|max:255',
+        'pdf_file' => 'file|mimes:pdf|max:2048', // Assuming maximum file size is 2MB
+    ]);
+
+     //Handle PDF upload
+    if ($request->hasFile('pdf_file')) {
+       $pdf = $request->file('pdf_file');
+       $pdfName = time() . '_' . $pdf->getClientOriginalName();
+        $pdf->storeAs('Job Discription PDF', $pdfName); // Store the PDF file in the storage/pdf folder
+    }
+
+    // Create a new job application record
+    $OpenPositions = new OpenPositions();
+    $OpenPositions->position_name = $validatedData['position_name'];
+    $OpenPositions->job_description = $validatedData['job_description'];
+  //  $OpenPositions->job_description_pdf = $pdfName; // Save the PDF file name in the database
+
+    // Save the job application
+    if ($OpenPositions->save()) {
+        // Job application saved successfully
+        toast('Open Position Added!', 'success');
+    } else {
+        // Failed to save job application
+        toast('Position Failed to be Added!', 'error');
+    }
+
+    // Redirect back to the form page
+    return redirect()->back();
+}
+
+public function PositionsDelete ($id)
+
+ {
+    $OpenPositions = OpenPositions::find($id);
+
+    if ($OpenPositions) {
+        $OpenPositions->delete();
+        $user = Auth::user();
+        $OpenPositions = OpenPositions::all(); // Fetch updated list of job applications
+    
+        toast('Position Deleted!', 'success');
+        return view('admin.OpenPositions', ['user' => $user,'OpenPositions' => $OpenPositions])->with('success', 'Successfully Deleted!');
+     } else {
+         $user = Auth::user();
+         $OpenPositions = OpenPositions::all(); // Fetch updated list of job applications
+    
+         toast('Something Went Wrong!', 'error');
+          return view('admin.OpenPositions', ['user' => $user,'OpenPositions' => $OpenPositions])->with('error', 'Something Went Wrong!');
+      }
+ }
+
+
+
+public function showEditPositionsForm($id)
+{
+    $user = Auth::user();
+    // Find the job application by ID
+    $OpenPositions = OpenPositions::findOrFail($id);
+
+    // Pass the job application data to the view
+    return view('admin.editPositions', ['user' => $user,'OpenPositions' => $OpenPositions]);
+}
+
+
+
+public function editPositions(Request $request)
+{
+    // Validate the incoming request data
+    $request->validate([
+        'position_name' => 'required|string|max:255',
+        'job_description' => 'required|string|max:255',
+        'pdf_file' => 'file|mimes:pdf|max:2048',
+        // Add validation rules for other fields as needed
+    ]);
+
+    // Retrieve the job application instance from the database
+    $OpenPositions= OpenPositions::findOrFail($request->input('id'));
+
+
+    // Handle file upload
+    if ($request->hasFile('pdf_file')) {
+        $file = $request->file('pdf_file');
+        
+        // Save file with original name
+        $fileName = $file->getClientOriginalName();
+        $file->storeAs('public/Job Discription PDF', $fileName);
+
+        // Update database record with new filename
+        $OpenPositions->pdf_file = $fileName;
+    }
+
+    // Update the job application with the new data
+    
+    $OpenPositions->update([
+        'position_name' => $request->input('position_name'),
+        'job_description' => $request->input('job_description'),
+        // Update other fields as needed
+    ]);
+
+    if ($OpenPositions->wasChanged()) {
+        // Success: Job application was updated
+        toast('Open position updated successfully.', 'success');
+    } else {
+        // Error: Job application was not updated
+        toast('Failed to update Open position.', 'error');
+    }
+
+    return redirect()->route('showEditPositionsForm', ['id' => $OpenPositions->id]);
+
+}
 
 
 // Controller method
@@ -332,69 +464,52 @@ public function getApplicationDetails($applicationId)
     return view('admin/addJobApplication', ['user' => $user, 'userData' => $userData, 'jobApplication' => $jobApplication]);
 }
     
-       
 
-public function applicationStore(Request $request)
-{
-    // Validate the incoming request data
-    $validatedData = $request->validate([
-        'FirstName' => 'required|string|max:255',
-        'LastName' => 'required|string|max:255',
-        'Nationality' => 'required|string|max:255',
-        'Email' => 'required|email|max:255',
-        'ContactNo' => 'required|string|max:20',
-        'PositionApplied' => 'required|string|max:255',
-        'JobType' => 'required|string|in:Experienced,FreshGraduate,Internship',
-        'DateCreate' => 'required|date',
-        'FieldOfStudy' => 'required|string',
-        'UniversityInstitute' => 'required|string',
-        'Qualification' => 'required|string',
-        'UploadResume' => '|file|mimes:pdf|max:2048',
-    ]);
-
-    // Check if a file was uploaded
-    if ($request->hasFile('UploadResume')) {
-        $uploadResume = $request->file('UploadResume');
-
-        // Generate a unique name for the resume file
-        $resumeName = time() . '_' . $uploadResume->getClientOriginalName();
-
-        // Move the uploaded resume file to the public/resume directory with the new name
-        $uploadResume->move(public_path('Resume'), $resumeName);
-    } else {
-        // If no file was uploaded, set $resumeName to null
-        $resumeName = null;
-    }
-
-    // Create a new job application record
-    $jobApplication = new JobApplication();
-    $jobApplication->FirstName = $validatedData['FirstName'];
-    $jobApplication->LastName = $validatedData['LastName'];
-    $jobApplication->Nationality = $validatedData['Nationality'];
-    $jobApplication->Email = $validatedData['Email'];
-    $jobApplication->ContactNo = $validatedData['ContactNo'];
-    $jobApplication->PositionApplied = $validatedData['PositionApplied'];
-    $jobApplication->JobType = $validatedData['JobType'];
-    $jobApplication->DateCreate = $validatedData['DateCreate'];
-    $jobApplication->FieldOfStudy = $validatedData['FieldOfStudy'];
-    $jobApplication->UniversityInstitute = $validatedData['UniversityInstitute'];
-    $jobApplication->Qualification = $validatedData['Qualification'];
-    $jobApplication->UploadResume = $resumeName; // Save the file name, or null if no file is uploaded
-
-    // Save the job application
-    if ($jobApplication->save()) {
-        // Job application saved successfully
-        toast('Job Application Added!', 'success');
-    } else {
-        // Failed to save job application
-        toast('Failed to add job application!', 'error');
-    }
-
-    // Redirect back to the form page
-    return redirect()->back();
-}
-
-
+        public function applicationStore(Request $request)
+        {
+            $user = Auth::user();
+    $userData = User::where('id', '!=', Auth::user()->id)->get();
+            // Validate the incoming request data
+            $validatedData = $request->validate([
+                'FirstName' => 'required|string|max:255',
+                'LastName' => 'required|string|max:255',
+                'Nationality' => 'required|string|max:255',
+                'Email' => 'required|email|max:255',
+                'ContactNo' => 'required|string|max:20',
+                'PositionApplied' => 'required|string|max:255',
+                'JobType' => 'required|string|in:Experienced,FreshGraduate,Internship',
+                'DateCreate' => 'required|date',
+                'FieldOfStudy' => 'required|string',
+                'UniversityInstitute' => 'required|string',
+                'Qualification' => 'required|string',
+            ]);
+        
+            // Create a new job application record
+            $jobApplication = new JobApplication();
+            $jobApplication->FirstName = $validatedData['FirstName'];
+            $jobApplication->LastName = $validatedData['LastName'];
+            $jobApplication->Nationality = $validatedData['Nationality'];
+            $jobApplication->Email = $validatedData['Email'];
+            $jobApplication->ContactNo = $validatedData['ContactNo'];
+            $jobApplication->PositionApplied = $validatedData['PositionApplied'];
+            $jobApplication->JobType = $validatedData['JobType'];
+            $jobApplication->DateCreate = $validatedData['DateCreate'];
+            $jobApplication->FieldOfStudy = $validatedData['FieldOfStudy'];
+            $jobApplication->UniversityInstitute = $validatedData['UniversityInstitute'];
+            $jobApplication->Qualification = $validatedData['Qualification'];
+        
+            // Save the job application
+            if ($jobApplication->save()) {
+                // Job application saved successfully
+                toast('Job Application Added!', 'success');
+            } else {
+                // Failed to save job application
+                toast('Failed to add job application!', 'error');
+            }
+        
+            // Redirect back to the form page
+            return redirect()->back();
+        }
 
 public function applicationDelete($ApplicationID)
 {
