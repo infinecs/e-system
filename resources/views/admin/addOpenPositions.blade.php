@@ -1,7 +1,5 @@
 @extends('layout.appAdmin')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @section('content')
-
 <div class="nk-content">
     <div class="container-fluid">
         <div class="nk-content-inner">
@@ -47,6 +45,18 @@
                                                 <div class="col-lg-6">
                                                 </div>
                                                 <div class="col-lg-6">
+                                                <div class="form-group">
+                                                <label class="form-label">Status</label>
+                                                <select class="form-control" name="status" id="status" >
+                                                    <option value="1" style="background-color: green;color: white;">Active</option>
+                                                    <option value="0" style="background-color: red; color: white;">Deactive</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                </div>
+                                                
+                                                <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label class="form-label">Job Discription</label>
                                                         <textarea type="text" class="form-control" placeholder="Discription" name="job_description"  style="height: 150px; width: 200%;" ></textarea>
@@ -54,6 +64,7 @@
                                                     </div>
                                                 </div>
                                                 </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -107,5 +118,4 @@
 </div>
 </div>
 </div>
-
 @endsection

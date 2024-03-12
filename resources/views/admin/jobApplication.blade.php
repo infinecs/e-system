@@ -1,5 +1,4 @@
 @extends('layout.appAdmin')
-
 @section('content')
 
 <div class="nk-content">
@@ -35,65 +34,87 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Filter Section -->
                 <div class="nk-block">
-                    <div class="card">
-                        <div class="card-body">
-                            <form action="{{ route('admin.jobApplication') }}" method="GET">
-                            
-                                <div class="row mb-4">
-                                <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="filterJobType">Job Type:</label>
-                                    <select class="form-control" id="filterJobType" name="jobType">
-                                        <option value="" disabled selected>Select Job Type</option>
-                                        <option value="Experienced" {{ request('jobType') == 'Experienced' ? 'selected' : '' }}>Experienced</option>
-                                        <option value="FreshGraduate" {{ request('jobType') == 'FreshGraduate' ? 'selected' : '' }}>FreshGraduate</option>
-                                        <option value="Internship" {{ request('jobType') == 'Internship' ? 'selected' : '' }}>Internship</option>
-                                    </select>
-                                </div>
-                            </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="filterQualification">Qualification:</label>
-                                            <input type="text" class="form-control" id="filterQualification" name="qualification" placeholder="Filter by Qualification" value="{{ request('qualification') }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="filterPosition">Position Applied:</label>
-                                            <select class="form-control" id="filterPosition" name="position">
-                                                <option value="">Select Position</option>
-                                                <option value="Graduate Trainee" {{ request('position') == 'Graduate Trainee' ? 'selected' : '' }}>Graduate Trainee</option>
-                                                <option value="Software Engineer" {{ request('position') == 'Software Engineer' ? 'selected' : '' }}>Software Engineer</option>
-                                                <option value="Embedded Software Engineer" {{ request('position') == 'Embedded Software Engineer' ? 'selected' : '' }}>Embedded Software Engineer</option>
-                                                <option value="Design for Test (DFT) Engineer" {{ request('position') == 'Design for Test (DFT) Engineer' ? 'selected' : '' }}>Design for Test (DFT) Engineer</option>
-                                                <option value="Physical Design Engineer (ASIC)" {{ request('position') == 'Physical Design Engineer (ASIC)' ? 'selected' : '' }}>Physical Design Engineer (ASIC)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="dateRange">Date Range:</label>
-                                        <div class="input-daterange input-group">
-                                            <input type="date" class="form-control" id="filterDateFrom" name="dateFrom" placeholder="Start Date" value="{{ request('dateFrom') }}" format="yyyy-MM-dd">
-                                            <div class="input-group-text">to</div>
-                                            <input type="date" class="form-control" id="filterDateTo" name="dateTo" placeholder="End Date" value="{{ request('dateTo') }}" format="yyyy-MM-dd">
-                                        </div>
-                                    </div>
-                                </div>
-</div>
-                                <div class="row mb-4">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-primary">Filter</button>
-                                        <a href="{{ route('admin.jobApplication') }}" class="btn btn-secondary">Clear Filters</a>
-                                    </div>
-                                </div>
+    <div class="card">
+        <div class="card-body">
+                <form action="{{ route('admin.jobApplication2') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="form-group" >
+                            <label for="excelFile" class="form-label" style=" margin-left: 150px;">Upload Excel File:</label>
+                            <input type="file" class="form-control" id="excelFile" name="excelFile" accept=".xls,.xlsx" style="width: 200%; margin-left: 150px;">
+                        </div>
+                        </div>
+                    <div class="col-md-6">
+                        <div class="form-group" >
+                        
+                            <button type="submit" id="uploadButton" class="btn btn-primary" style="margin-top: 30px; margin-left: 500px; ">Upload</button>
                             </form>
+                            </div>
+                            </div>
+                            </div>
+        <!-- Filter Section -->
+<div class="nk-block">
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ route('admin.jobApplication') }}" method="GET">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="filterJobType">Job Type:</label>
+                            <select class="form-control" id="filterJobType" name="jobType">
+                                <option value="" disabled selected>Select Job Type</option>
+                                <option value="Experienced" {{ request('jobType') == 'Experienced' ? 'selected' : '' }}>Experienced</option>
+                                <option value="FreshGraduate" {{ request('jobType') == 'FreshGraduate' ? 'selected' : '' }}>Fresh Graduate</option>
+                                <option value="Internship" {{ request('jobType') == 'Internship' ? 'selected' : '' }}>Internship</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="filterQualification">Qualification:</label>
+                            <input type="text" class="form-control" id="filterQualification" name="qualification" placeholder="Filter by Qualification" value="{{ request('qualification') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="filterPosition">Position Applied:</label>
+                            <select class="form-control" id="filterPosition" name="position">
+                                <option value="">Select Position</option>
+                                <option value="Graduate Trainee" {{ request('position') == 'Graduate Trainee' ? 'selected' : '' }}>Graduate Trainee</option>
+                                <option value="Software Engineer" {{ request('position') == 'Software Engineer' ? 'selected' : '' }}>Software Engineer</option>
+                                <option value="Embedded Software Engineer" {{ request('position') == 'Embedded Software Engineer' ? 'selected' : '' }}>Embedded Software Engineer</option>
+                                <option value="Design for Test (DFT) Engineer" {{ request('position') == 'Design for Test (DFT) Engineer' ? 'selected' : '' }}>Design for Test (DFT) Engineer</option>
+                                <option value="Physical Design Engineer (ASIC)" {{ request('position') == 'Physical Design Engineer (ASIC)' ? 'selected' : '' }}>Physical Design Engineer (ASIC)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="dateRange">Date Range:</label>
+                            <div class="input-daterange input-group">
+                                <input type="date" class="form-control" id="filterDateFrom" name="dateFrom" placeholder="Start Date" value="{{ request('dateFrom') }}" format="yyyy-MM-dd">
+                                <div class="input-group-text">to</div>
+                                <input type="date" class="form-control" id="filterDateTo" name="dateTo" placeholder="End Date" value="{{ request('dateTo') }}" format="yyyy-MM-dd">
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6">
+                        <div class="form-group"  >
+                            <button type="submit" class="btn btn-primary" >Filter</button>
+                            <a href="{{ route('admin.jobApplication') }}" class="btn btn-secondary" >Clear Filters</a>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
                 <!-- Filter Criteria -->
                 @if(request('jobType') || request('qualification') || request('position') || request('dateFrom')| request('dateTo'))
@@ -194,7 +215,13 @@
                             </table>
                             
                         </div><!-- .card-body -->
-
+                        <script>
+    @if(session('success'))
+        toast('{{ session('success') }}', 'success');
+    @elseif(session('error'))
+        toast('{{ session('error') }}', 'error');
+    @endif
+</script>
 
 
 
@@ -329,6 +356,19 @@
 });
 </script>
 
+
+<script>
+
+
+$(document).ready(function() {
+    // Click event listener for the upload button
+    $(document).on('click', '#uploadButton', function() {
+        // Perform actions when the upload button is clicked
+        // For example, you can trigger the file input click event to open the file dialog
+        $('#excelFile').click();
+    });
+});
+</script>
 
 <script>
     $(document).ready(function() {

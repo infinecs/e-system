@@ -43,6 +43,17 @@
                                                         </div>
                                                         <div class="col-lg-6">
                                                 </div>
+                                                <div class="col-lg-6">
+                                                <div class="form-group">
+                                                <label class="form-label">Status</label>
+                                                <select class="form-control" name="status" id="status" >
+                                                    <option value="1" style="background-color: green;color: white;" {{ $OpenPositions->status == 1 ? 'selected' : '' }}>Active</option>
+                                                    <option value="0" style="background-color: red; color: white;" {{ $OpenPositions->status == 0 ? 'selected' : '' }}>Deactive</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                </div>
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label class="form-label">Job Description</label>
@@ -89,7 +100,7 @@
                                             <button type="submit" class="btn btn-primary">Update Open Position</button>
                                         </li>
                                         <li>
-                                            <a href="/admin/jobApplication" class="btn border-0">Cancel</a>
+                                            <a href="admin/OpenPositions" class="btn border-0">Cancel</a>
                                         </li>
                                     </ul>
                                 </div>

@@ -59,7 +59,7 @@ Route::post('/forgotPasswordAction', [LoginController::class, 'forgotPasswordAct
     Route::put('/admin/profileEdit', [AdminController::class, 'update'])->name('update');
 
     Route::get('/admin/jobApplication', [AdminController::class, 'jobApplication'])->name('admin.jobApplication');
-    
+    Route::post('/admin/jobApplication', [AdminController::class, 'jobApplication'])->name('admin.jobApplication2');
 
     Route::get('/admin/editJobApplication/{ApplicationID}', [AdminController::class, 'showEditForm'])->name('showEditForm');
     Route::post('/admin/editJobApplication', [AdminController::class, 'editJobApplication'])->name('editJobApplication');

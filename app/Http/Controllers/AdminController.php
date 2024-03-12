@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use App\Models\User;
 use App\Models\Profile;
@@ -17,6 +18,7 @@ use App\Models\category;
 use Illuminate\Support\Facades\DB;
 use App\Models\jobapplication;
 use App\Models\OpenPositions;
+use Carbon\Carbon;
 Use Alert;
 
 class AdminController extends Controller
@@ -296,7 +298,8 @@ public function PositionsStore(Request $request)
     $validatedData = $request->validate([
         'position_name' => 'required|string|max:255',
         'job_description' => 'required|string|max:255',
-        'pdf_file' => 'file|mimes:pdf|max:2048', // Assuming maximum file size is 2MB
+        'pdf_file' => 'file|mimes:pdf|max:2048',
+        'status' => 'required|in:0,1', // Assuming maximum file size is 2MB
     ]);
 
      //Handle PDF upload
@@ -310,6 +313,7 @@ public function PositionsStore(Request $request)
     $OpenPositions = new OpenPositions();
     $OpenPositions->position_name = $validatedData['position_name'];
     $OpenPositions->job_description = $validatedData['job_description'];
+    $OpenPositions->status = $request->status;
   //  $OpenPositions->job_description_pdf = $pdfName; // Save the PDF file name in the database
 
     // Save the job application
@@ -367,6 +371,7 @@ public function editPositions(Request $request)
         'position_name' => 'required|string|max:255',
         'job_description' => 'required|string|max:255',
         'pdf_file' => 'file|mimes:pdf|max:2048',
+        'status' => 'required|in:0,1',
         // Add validation rules for other fields as needed
     ]);
 
@@ -391,6 +396,8 @@ public function editPositions(Request $request)
     $OpenPositions->update([
         'position_name' => $request->input('position_name'),
         'job_description' => $request->input('job_description'),
+        'status' => $request->input('status'),
+
         // Update other fields as needed
     ]);
 
@@ -410,32 +417,86 @@ public function editPositions(Request $request)
 // Controller method
 public function jobApplication(Request $request)
 {
-    $jobapplicationData = JobApplication::query();
-    
-    // Apply filtering based on request parameters
-    if ($request->filled('jobType')) {
-        $jobapplicationData->where('JobType', $request->input('jobType'));
-    }
-    if ($request->filled('qualification')) {
-        $jobapplicationData->where('Qualification', $request->input('qualification'));
-    }
-    if ($request->filled('position')) {
-        $jobapplicationData->where('PositionApplied', $request->input('position'));
-    }
-    if ($request->filled('dateFrom') && $request->filled('dateTo')) {
-        $jobapplicationData->whereBetween('DateCreate', [$request->input('dateFrom'), $request->input('dateTo')]);
-    }
-    $filteredJobApplications = $jobapplicationData->get();
-    
-    // Retrieve authenticated user
-    $user = Auth::user();
+    try {
+        // Retrieve filtered job applications
+        $jobapplicationData = JobApplication::query();
+        
+        // Apply filtering based on request parameters
+        if ($request->filled('jobType')) {
+            $jobapplicationData->where('JobType', $request->input('jobType'));
+        }
+        if ($request->filled('qualification')) {
+            $jobapplicationData->where('Qualification', $request->input('qualification'));
+        }
+        if ($request->filled('position')) {
+            $jobapplicationData->where('PositionApplied', $request->input('position'));
+        }
+        if ($request->filled('dateFrom') && $request->filled('dateTo')) {
+            $jobapplicationData->whereBetween('DateCreate', [$request->input('dateFrom'), $request->input('dateTo')]);
+        }
+        
+        // Get filtered job applications
+        $filteredJobApplications = $jobapplicationData->get();
+        
+        // Retrieve authenticated user
+        $user = Auth::user();
 
-    // Pass filtered data and user to the view
-    return view('admin.jobApplication', [
-        'jobapplicationData' => $filteredJobApplications,
-        'user' => $user
-    ]);
+        // Check if Excel file is uploaded
+        if ($request->hasFile('excelFile')) {
+            // Handle Excel file upload
+            $file = $request->file('excelFile');
+            $fileName = time() . '_' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads'), $fileName);
+
+            // Process the uploaded Excel file
+            $spreadsheet = IOFactory::load(public_path('uploads/' . $fileName));
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+            // Assuming the Excel file has headers and data starts from the second row
+            $headers = $sheetData[0]; // Assuming headers are in the first row
+            $data = array_slice($sheetData, 1); // Exclude headers row
+
+            // Insert data from Excel file into database
+            foreach ($data as $row) {
+                $dateCreateIndex = array_search('DateCreate', $headers);
+                if ($dateCreateIndex !== false) {
+                    // Convert the "DateCreate" value to a valid date format using Carbon
+                    $DateCreate = Carbon::createFromFormat('m/d/y', $row[$dateCreateIndex]);
+                    if ($DateCreate) {
+                        // Format the date as YYYY-MM-DD
+                        $row[$dateCreateIndex] = $DateCreate->format('Y-m-d');
+                        // Assuming your database table is named 'job_applications'
+                        DB::table('jobapplication')->insert(array_combine($headers, $row));
+                    } else {
+                        Log::warning('Invalid date format for DateCreate column: ' . $row[$dateCreateIndex]);
+                    }
+                } else {
+                    Log::warning('Missing "DateCreate" column in headers.');
+                }
+            }
+            // Display success toast message if data insertion is successful
+            toast('Job Application Data Added!', 'success');
+        }
+
+        // Reload filtered job applications after adding data from Excel
+        $filteredJobApplications = $jobapplicationData->get();
+
+        // Pass filtered data and user to the view
+        return view('admin.jobApplication', [
+            'jobapplicationData' => $filteredJobApplications,
+            'user' => $user
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Failed to add job application data: ' . $e->getMessage());
+
+        // Display error toast message if an exception occurs
+        toast('Failed to add job application data!', 'error');
+
+        // Redirect back to the page with the error message
+        return redirect()->back();
+    }
 }
+
 
 
 public function getApplicationDetails($applicationId)

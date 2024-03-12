@@ -48,7 +48,8 @@
                                                     <th><span class="overline-title">No.</span></th>
                                                     <th><span class="overline-title">Position Name</span></th>
                                                     <th><span class="overline-title">Job Discription</span></th>
-                                                    <th><span>Action</span></th>
+                                                    <th><span class="overline-title">Status</span></th>
+                                                    <th style="text-align: center;"><span class="overline-title">Action</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -57,6 +58,13 @@
         <td>{{ $key + 1 }}</td>
         <td>{{ $position->position_name }}</td>
         <td>{{ $position->job_description }}</td>
+        <td>
+        @if($position->status == 1)
+            <span class="badge text-bg-success-soft">Active</span>
+        @else
+            <span class="badge text-bg-danger-soft">Deactive</span> 
+        @endif
+    </td>
         <td>
             <div class="dropdown d-flex justify-content-center">
                 <a href="#" class="btn btn-sm btn-icon btn-zoom" data-bs-toggle="dropdown">
@@ -84,6 +92,8 @@
                 </div>
             </div><!-- dropdown -->
         </td>
+        
+</tr>
     </tr>
     @endforeach
 </tbody>
