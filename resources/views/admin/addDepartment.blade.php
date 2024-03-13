@@ -7,12 +7,12 @@
                 <div class="nk-block">
                     <div class="nk-block-head">
                         <div class="nk-block-head-content">
-                            <h2 class="nk-block-title">Add Job Position</h2>
+                            <h2 class="nk-block-title">Add Department</h2>
                             <nav>
                                 <ol class="breadcrumb breadcrumb-arrow mb-0">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Job Position</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Add Job Position</li>
+                                    <li class="breadcrumb-item"><a href="#">Job Department</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Add Department</li>
                                 </ol>
                             </nav>
                         </div>
@@ -27,10 +27,8 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ route('PositionsStore') }}" method="POST" enctype="multipart/form-data" id="OpenPositionsForm">
-
-
-                            @csrf
+                        <form action="{{ route('departmentStore') }}" method="POST" enctype="multipart/form-data" id="DepartmentForm">
+                        @csrf
                             <div class="row g-gs">
                                 <div class="col-md-8">
                                     <div class="card card-bordered">
@@ -38,8 +36,8 @@
                                             <div class="row g-gs">
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
-                                                        <label class="form-label"> Position Name</label>
-                                                        <input type="text" class="form-control" placeholder="Position" name="position_name" style="width: 150%;">
+                                                        <label class="form-label"> Department Name</label>
+                                                        <input type="text" class="form-control" placeholder="Department Name" name="name" style="width: 150%;">
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -55,58 +53,21 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 </div>
+                                                </div>
                                                 
-                                                <div class="col-lg-6">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Job Discription</label>
-                                                        <textarea type="text" class="form-control" placeholder="Discription" name="job_description"  style="height: 150px; width: 200%;" ></textarea>
-                                                         
-                                                    </div>
-                                                </div>
-                                                </div>
-                                            
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="card card-bordered">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                            
-                                            <div class="col-sm-6">
-                                            <div class="form-group text-center">
-    <label class="form-label">Job Discription PDF</label>
-    <div class="form-control-wrap">
-        <div class="js-upload d-flex justify-content-center align-items-center" id="pdf_file" data-max-files="1">
-            <div class="dz-message" data-dz-message>
-                <div class="dz-message-icon"></div>
-                <span class="dz-message-text">Drag and drop file</span>
-                <div class="dz-message-btn mt-2">
-                    <input type="file" style="visibility: hidden; position: absolute;" name="pdf_file">
-                    <button type="button" class="btn btn-primary mt-2" id="uploadButton">Upload</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
-<div class="form-note mt-3" >Job Discription PDF. Only PDF files are accepted.</div>
-</div>
-
-</div>
-</div>
-</div>
-</div>
-<br>
+                                    </div>
+                                    </div>
+                                <br>
 <div class="row g-gs justify-content-end">
     <div class="gap-col">
         <ul class="d-flex align-items-center gap g-3">
             <li>
-                <button type="submit" class="btn btn-primary">Add Open Positions</button>
+                <button type="submit" class="btn btn-primary">Add Department</button>
             </li>
             <li>
-                <a href="admin/OpenPositions" class="btn border-0">Cancel</a>
+                <a href="admin/department" class="btn border-0">Cancel</a>
             </li>
         </ul>
     </div>

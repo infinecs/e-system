@@ -36,6 +36,12 @@
                                         <h6 class="overline-title">Applications</h6>
                                     </li>
                                     <li class="nk-menu-item">
+                                        <a href="/admin/job" class="nk-menu-link">
+                                            <span class="nk-menu-icon"><em class="icon ni ni-coin-alt"></em></span>
+                                            <span class="nk-menu-text">Job</span>
+                                        </a>
+                                            </li>
+                                    <li class="nk-menu-item">
                                         <a href="/admin/jobApplication" class="nk-menu-link">
                                             <span class="nk-menu-icon"><em class="icon ni ni-user-list"></em></span>
                                             <span class="nk-menu-text">Job-Applications</span>
@@ -70,7 +76,13 @@
                                             <li class="nk-menu-item">
                                                 <a href="/admin/OpenPositions" class="nk-menu-link">
                                                 <span class="nk-menu-icon"><em class="icon ni ni-briefcase"></em></span>
-                                                    <span class="nk-menu-text">Open Positions</span>
+                                                    <span class="nk-menu-text">Job Position</span>
+                                                </a>
+                                            </li>
+                                            <li class="nk-menu-item">
+                                                <a href="/admin/department" class="nk-menu-link">
+                                                <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
+                                                    <span class="nk-menu-text">Department</span>
                                                 </a>
                                             </li>
                                         </ul>

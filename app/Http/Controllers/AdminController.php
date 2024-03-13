@@ -18,6 +18,7 @@ use App\Models\category;
 use Illuminate\Support\Facades\DB;
 use App\Models\jobapplication;
 use App\Models\OpenPositions;
+use App\Models\department;
 use Carbon\Carbon;
 Use Alert;
 
@@ -270,11 +271,137 @@ class AdminController extends Controller
 
             return view('admin/userList')->with('user',$user)->with('userData',$userData)->with('error','Something Went Wrong!');
         }
-        
-
-        
+           
 
     }
+
+    public function job()
+    {
+        $user = Auth::user(); // Fetch authenticated user
+      //  $job = job::all(); // Fetch all open 
+      //'job' => $job,
+        return view('admin/job', [ 'user' => $user]);
+    }
+
+
+    public function department()
+    {
+        $user = Auth::user(); // Fetch authenticated user
+        $department = department::all(); // Fetch all open 
+        return view('admin/department', ['department' => $department, 'user' => $user]);
+    }
+
+
+    public function addDepartment()
+    {
+        $user = Auth::user(); // Fetch authenticated user
+        $department = department::all(); // Fetch all 
+        return view('admin/addDepartment', ['department' => $department, 'user' => $user]);
+    }
+
+    public function departmentStore(Request $request)
+{
+    // Validate the incoming request data
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'status' => 'required|in:0,1', // Assuming maximum file size is 2MB
+    ]);
+
+    
+    $department = new department();
+    $department->name = $validatedData['name'];
+    $department->created_at = now();
+    $department->status = $request->status;
+    $department->updated_at = null;
+  
+
+    // Save the job application
+    if ($department->save()) {
+        // Job application saved successfully
+        toast('Department Added!', 'success');
+    } else {
+        // Failed to save job application
+        toast('Department Failed to be Added!', 'error');
+    }
+
+    // Redirect back to the form page
+    return redirect()->back();
+}
+
+
+    
+
+
+public function showEditDepartmentForm($id)
+{
+    $user = Auth::user();
+    // Find the job application by ID
+    $department = department::findOrFail($id);
+
+    // Pass the job application data to the view
+    return view('admin.editDepartment', ['user' => $user,'department' => $department]);
+}
+
+
+public function editDepartment(Request $request)
+{
+    // Validate the incoming request data
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'status' => 'required|in:0,1',
+        
+        // Add validation rules for other fields as needed
+    ]);
+
+    // Retrieve the job application instance from the database
+    $department= department::findOrFail($request->input('id'));
+
+    // Update the job application with the new data
+    
+    $department->update([
+        'name' => $request->input('name'),
+        'job_description' => $request->input('job_description'),
+        'status' => $request->input('status'),
+        'updated_at' => now(),
+        
+    ]);
+
+    if ($department->wasChanged()) {
+        // Success: Job application was updated
+        toast('Department updated successfully.', 'success');
+    } else {
+        // Error: Job application was not updated
+        toast('Failed to update Department.', 'error');
+    }
+
+    return redirect()->route('showEditDepartmentForm', ['id' => $department->id]);
+
+}
+
+
+
+
+
+    public function departmentDelete ($id)
+
+ {
+    $department = department::find($id);
+
+    if ($department) {
+        $department->delete();
+        $user = Auth::user();
+        $department = department::all(); // Fetch updated list of 
+    
+        toast('Department Deleted!', 'success');
+        return view('admin.department', ['user' => $user,'department' => $department])->with('success', 'Successfully Deleted!');
+     } else {
+         $user = Auth::user();
+         $department = department::all(); // Fetch updated list of 
+    
+         toast('Something Went Wrong!', 'error');
+          return view('admin.department', ['user' => $user,'department' => $department])->with('error', 'Something Went Wrong!');
+      }
+ }
 
     public function OpenPositions()
 {

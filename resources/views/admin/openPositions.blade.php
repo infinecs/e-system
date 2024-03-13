@@ -7,14 +7,14 @@
                 <div class="nk-block-head nk-page-head">
                 <div class="nk-block-head-between flex-wrap gap g-2">
                     <div class="nk-block-head-content">
-                        <h1 class="nk-block-title">Open Positions</h1>
+                        <h1 class="nk-block-title">Job Position</h1>
                         <div>
                             
                         <nav>
                             <ol class="breadcrumb breadcrumb-arrow mb-0">
                                 <li class="breadcrumb-item"><a href="/admin/index">Home</a></li>
                                 <li class="breadcrumb-item"><a href="#">Settings</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Open Positions</li>
+                                <li class="breadcrumb-item active" aria-current="page">Job Position</li>
                             </ol>
                         </nav>
                     </div>

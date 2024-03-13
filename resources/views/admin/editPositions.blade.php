@@ -7,12 +7,12 @@
                 <div class="nk-block">
                     <div class="nk-block-head">
                         <div class="nk-block-head-content">
-                            <h2 class="nk-block-title">Edit Open Positions</h2>
+                            <h2 class="nk-block-title">Edit Job Position</h2>
                             <nav>
                                 <ol class="breadcrumb breadcrumb-arrow mb-0">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Open Positions</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Edit Open Positions</li>
+                                    <li class="breadcrumb-item"><a href="#">Job Position</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Edit Job Position</li>
                                 </ol>
                             </nav>
                         </div>

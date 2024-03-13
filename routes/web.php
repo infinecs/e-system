@@ -68,6 +68,14 @@ Route::post('/forgotPasswordAction', [LoginController::class, 'forgotPasswordAct
     Route::get('/admin/addJobApplication', [AdminController::class, 'addJobApplication']);
     Route::post('/admin/applicationStore', [AdminController::class, 'applicationStore'])->name('applicationStore');
 
+    Route::get('/admin/department', [AdminController::class, 'department']);
+    Route::get('/admin/addDepartment', [AdminController::class, 'addDepartment']);
+    Route::get('/admin/editDepartment/{id}', [AdminController::class, 'showEditDepartmentForm'])->name('showEditDepartmentForm');
+    Route::post('/admin/editDepartment', [AdminController::class, 'editDepartment'])->name('editDepartment');
+    Route::get('/admin/departmentDelete/{id}', [AdminController::class, 'departmentDelete'])->name('departmentDelete');
+    Route::post('/admin/departmentStore', [AdminController::class, 'departmentStore'])->name('departmentStore');
+
+    Route::get('/admin/job', [AdminController::class, 'job']);
 
     Route::get('/admin/OpenPositions', [AdminController::class, 'OpenPositions']);
     Route::get('/admin/addOpenPositions', [AdminController::class, 'addOpenPositions']);
