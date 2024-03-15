@@ -25,7 +25,7 @@
                                             <div class="nk-block-head-content">
                                                 <div class="d-flex flex-column flex-md-row align-items-md-center">
                                                     <div class="media media-huge media-circle">
-                                                        <img src="./images/avatar/a.jpg" class="img-thumbnail" alt="">
+                                                        <img src="./images/avatar/st.png" class="img-thumbnail" alt="">
                                                     </div>
                                                     <div class="mt-3 mt-md-0 ms-md-3">
                                                         <h3 class="title mb-1">Software Developer</h3>
@@ -146,21 +146,92 @@
                         </div><!-- .tab-pane -->
                         <div class="tab-pane" id="tab-2">
     <div class="card card-gutter-md">
-        <div class="card-row card-row-lg col-sep col-sep-lg">
-            <div class="card-aside">
-                <div class="card-body">
-                    <div class="bio-block">
-                    <h4>Summary</h4>
-    <p>This is where you can add content specific to the second tab.</p>
+        <div class="row">
+            <div class="col-lg-6" style="border-right: 1px solid #dddddd;">
+                <div class="card-aside col-sep">
+                    <div class="card-body col-sep">
+                        <div class="bio-block">
+                        <h4>Job Description</h4>
+                        <ul>
+                @foreach($descriptions as $description)
+                    <li><em class="icon ni ni-bullet-fill"></em>{{ $description->content }}</li>
+                @endforeach
+</ul>
 </div>
-
+<br>
+<div class="bio-block">
+<br>
+                    <h4>Job Requirements</h4>
+                    <ul>
+                    @foreach($requirements as $requirement)
+                    <li><em class="icon ni ni-bullet-fill"></em>{{ $requirement->content }}</li>
+                @endforeach
+                </ul>
+</div>
+</div>
                 </div><!-- .card-body -->
             </div>
-            <div class="card-content col-sep">
-                <div class="card-body">
-                    <div class="bio-block">
-                    <h4>Job Discription</h4>
-                    <p>Participate in the full software development lifecycle, including analysis, design, test, and delivery. Develop web applications using a variety of languages and technologies. Facilitate design and architecture brainstorms. Participate in code reviews.</p>
+            <div class="col-lg-6">
+                <div class="card-content col-sep">
+                    <div class="card-body">
+                        <div class="bio-block">
+                        <h4>Job Details</h4>
+                <ul class="list-group list-group-borderless small">
+                @if($jobDetail !== false)
+                    <li class="list-group-item">
+                        <span class="title fw-medium w-40 d-inline-block">Job ID:</span>
+                        <span class="text">{{ $jobDetail->job_reference }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Position Name:</span>
+                                    <span class="text">{{ $jobDetail->position_name }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Remote:</span>
+                                    <span class="text">{{ $jobDetail->remote }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Office Address:</span>
+                                    <span class="text">{{ $jobDetail->office_address }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Headcount:</span>
+                                    <span class="text">{{ $jobDetail->headcount }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Experience Level:</span>
+                                    <span class="text">{{ $jobDetail->experience_level }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Expected Close Date:</span>
+                                    <span class="text">{{ $jobDetail->expected_close_date }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Minimum Salary:</span>
+                                    <span class="text">{{ $jobDetail->min_salary }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Maximum Salary:</span>
+                                    <span class="text">{{ $jobDetail->max_salary }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Currency:</span>
+                                    <span class="text">{{ $jobDetail->currency }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Frequency:</span>
+                                    <span class="text">{{ $jobDetail->frequency }}</span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="title fw-medium w-40 d-inline-block">Contract Details:</span>
+                                    <span class="text">{{ $jobDetail->contract_details }}</span>
+                                </li>
+                                @else
+                <li class="list-group-item">No job details found.</li>
+                @endif
+                            </ul>
+                           
+</div>
 </div>
                 </div><!-- .card-body -->
             </div><!-- .card-content -->
@@ -169,26 +240,62 @@
 </div><!-- .tab-pane -->
 
 <div class="tab-pane" id="tab-3">
-    <div class="card card-gutter-md">
-        <div class="card-row card-row-lg col-sep col-sep-lg">
-            <div class="card-aside">
-                <div class="card-body">
-                    <div class="bio-block">
-                    <h4>Notes</h4>
-    <p>This is where you can add content specific to the second tab.</p>
-</div>
-                </div><!-- .card-body -->
+            <div class="card card-gutter-md">
+                <div class="card-row card-row-lg col-sep col-sep-lg">
+                    <div class="card-aside">
+                        <div class="card-body">
+                            <div class="bio-block">
+                            <h4>Notes</h4>
+                            <div id="notes-list-container" style="width: 300%;">
+        <ul id="notes-list" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            @if(empty($notes))
+                <li><em class="icon ni ni-bullet-fill"></em>No notes added</li>
+            @else
+                @foreach($notes as $note)
+                    <li>{{ $note }}</li>
+                @endforeach
+                                    @endif
+                                </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-absolute top-0 end-0 mt-4 me-5">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNotesModal">Add Notes</button>
+                    </div>
+                </div>
             </div>
-            <div class="card-content col-sep">
-                <div class="card-body">
-                    <div class="bio-block">
-                    <p>This is where you can add content specific to the second tab.</p>
-</div>
-                </div><!-- .card-body -->
-            </div><!-- .card-content -->
-        </div><!-- .card-row -->
-    </div><!-- .card -->
-</div><!-- .tab-pane -->
+        </div>
+        <!-- End of Tab 3 Content -->
+
+        <!-- Add Notes Modal -->
+        <div class="modal fade" id="addNotesModal" tabindex="-1" aria-labelledby="addNotesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addNotesModalLabel">Add Notes</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                <form id="addNotesForm">
+                    <div class="mb-3">
+                        <label for="notesInput" class="form-label">Notes:</label>
+                        <div id="notesInputs">
+                            <!-- Initial input field -->
+                            <input type="text" class="form-control mb-2" placeholder="Enter note">
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="addNoteInput()">Add More</button>
+                    </div>
+                </form>
+            </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="saveNotes()">Save Notes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 <div class="tab-pane" id="tab-4">
     <div class="card card-gutter-md">
         <div class="row">
@@ -199,7 +306,7 @@
                     <h4>Attachments</h4>
                     <table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
   <thead>
-    <tr style="background-color: purple; color: white;">
+    <tr style="background-color: #6B4EF8; color: white;">
       <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">No.</th>
       <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">Resume</th>
       <th style="border: 1px solid #dddddd; text-align: left; padding: 8px;">Action</th>
@@ -261,6 +368,52 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    </div>
+    </div>
+    </div>
+    </div>
+
+
+    <script>
+    function saveNotes() {
+        var notesList = document.getElementById('notes-list');
+        var inputs = document.querySelectorAll('#notesInputs input');
+        var notes = [];
+
+        // Collect notes from all input fields
+        inputs.forEach(function(input) {
+            var note = input.value.trim();
+            if (note !== '') {
+                notes.push('<li><em class="icon ni ni-bullet-fill"></em>' + note + '</li>');
+            }
+        });
+
+        // Check if there are any notes
+        if (notes.length === 0) {
+            // Display a message if no notes are added
+            notesList.innerHTML = '<li>No notes added</li>';
+        } else {
+            // Display all the notes
+            notesList.innerHTML = notes.join('');
+        }
+
+        // Close the modal
+        $('#addNotesModal').modal('hide');
+    }
+
+    function addNoteInput() {
+        var notesInputs = document.getElementById('notesInputs');
+        var newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.className = 'form-control mb-2';
+        newInput.placeholder = 'Enter note';
+        notesInputs.appendChild(newInput);
+    }
+</script>
      
 @endsection

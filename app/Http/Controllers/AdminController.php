@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\jobapplication;
 use App\Models\OpenPositions;
 use App\Models\department;
+use App\Models\JobDescription;
+use App\Models\JobDetail;
+use App\Models\JobRequirement;
 use Carbon\Carbon;
 Use Alert;
 
@@ -277,11 +280,21 @@ class AdminController extends Controller
 
     public function job()
     {
-        $user = Auth::user(); // Fetch authenticated user
-      //  $job = job::all(); // Fetch all open 
-      //'job' => $job,
-        return view('admin/job', [ 'user' => $user]);
+        $user = Auth::user();
+        $jobDetail = JobDetail::first(); // Fetching a specific job detail, you might want to adjust this query to fetch the correct one
+    
+        // Fetching descriptions and requirements related to this job detail
+        $descriptions = JobDescription::where('job_id', $jobDetail->id)->get();
+        $requirements = JobRequirement::where('job_id', $jobDetail->id)->get();
+    
+        return view('admin.job', compact('user', 'jobDetail', 'descriptions', 'requirements'));
     }
+
+    public function showNotes()
+{
+    $notes = []; // Retrieve notes from the database or any other source
+    return view('notes', compact('notes'));
+}
 
 
     public function department()
