@@ -7,12 +7,17 @@
                 <div class="nk-block-head nk-page-head">
                     <div class="nk-block-head-between flex-wrap gap g-2">
                         <div class="nk-block-head-content">
-                            <h1 class="nk-block-title">Job</h1>
+                            <h1 class="nk-block-title">Candidates</h1>
                             <nav>
+                            @foreach($positions as $position)
+                             @if($position->id === $jobDetail->id)
                                 <ol class="breadcrumb breadcrumb-arrow mb-0">
                                     <li class="breadcrumb-item"><a href="/admin/index">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Job</li>
+                                    <li class="breadcrumb-item"><a href="/admin/OpenPositions">Candidates</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ $position->open_position_name }}</li>
                                 </ol>
+                                @endif
+                                                @endforeach
                             </nav>
                         </div>
                         </div><div class="nk-content">
@@ -27,13 +32,18 @@
                                                     <div class="media media-huge media-circle">
                                                         <img src="./images/avatar/st.png" class="img-thumbnail" alt="">
                                                     </div>
+                                                    
                                                     <div class="mt-3 mt-md-0 ms-md-3">
-                                                        <h3 class="title mb-1">Software Developer</h3>
-                                                        <span class="small">IT Department</span>
+                                                    @foreach($positions as $position)
+                                                    @if($position->id === $jobDetail->id)
+                                                        <h3 class="title mb-1">{{ $position->open_position_name }}</h3>
+                                                        <span class="small">{{ $position->department_name }}</span>
                                                         <ul class="nk-list-option pt-1">
                                                             <li><em class="icon ni ni-map-pin"></em><span class="small">PENANG , Malaysia</span></li>
                                                             <li><em class="icon ni ni-building"></em><span class="small">Infinecs Systems Sdn Bhd</span></li>
                                                         </ul>
+                                                    @endif
+                                                @endforeach
                                                     </div>
                                                 </div>
                                             </div><!-- .nk-block-head-content -->
@@ -44,8 +54,15 @@
                                                     <h3 class="title mb-1"><em class="icon ni ni-spark-fill"></em> Status :</h3>
                                                     </div>
                                                     <div class="gap-col">
-                                                    <span class="badge text-bg-success" style="font-size: 1.2rem;">Active</span>
-                                                        
+                                                    @foreach($positions as $position)
+                                                        @if($position->id === $jobDetail->id)
+                                                            @if($position->status == 1)
+                                                                <span class="badge text-bg-success" style="font-size: 1.2rem;">Active</span>
+                                                            @elseif($position->status == 0)
+                                                                <span class="badge text-bg-danger" style="font-size: 1.2rem;">Deactive</span>
+                                                            @endif   
+                                                        @endif
+                                                    @endforeach
                                                     </div>
                                                     <div class="gap-col">
                                                     <button  style="font-size: 1.3rem; border: none; background-color: transparent;" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -89,53 +106,123 @@
                     <div class="tab-content" id="myTabCandidates">
                         <div class="tab-pane show active" id="tab-1" tabindex="0">
                             <div class="card card-gutter-md">
-                                <div class="card-row card-row-lg col-sep col-sep-lg">
                                     <div class="card-aside">
                                         <div class="card-body">
                                             <div class="bio-block">
-                                                <h4 class="bio-block-title">Details</h4>
-                                                <ul class="list-group list-group-borderless small">
-                                                    <li class="list-group-item">
-                                                        <span class="title fw-medium w-40 d-inline-block">Employee ID:</span>
-                                                        <span class="text">123456</span> <!-- Hardcoded employee ID -->
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                        <span class="title fw-medium w-40 d-inline-block">Full Name:</span>
-                                                        <span class="text">John Doe</span> <!-- Hardcoded full name -->
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                        <span class="title fw-medium w-40 d-inline-block">Email:</span>
-                                                        <span class="text">john@example.com</span> <!-- Hardcoded email -->
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                        <span class="title fw-medium w-40 d-inline-block">Address:</span>
-                                                        <span class="text">City, Country</span> <!-- Hardcoded address -->
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                        <span class="title fw-medium w-40 d-inline-block">Joining Date</span>
-                                                        <span class="text">2024-03-13</span> <!-- Hardcoded joining date -->
-                                                    </li>
-                                                </ul>
-                                            </div><!-- .bio-block -->
-                                            
-                                        </div><!-- .card-body -->
+                                                <h4 class="bio-block-title">Candidates</h4>
+                                                <div class="nk-block">
+                                <div class="card">
+                                    <div class="card-body">
+                                        @include('inc.message')
                                         
-                                    </div>
-                                    <div class="card-content col-sep">
-                                        <div class="card-body">
-                                            <div class="bio-block">
-                                                <h4 class="bio-block-title">About Me</h4>
-                                                <p><strong>About me content goes here.</strong></p> <!-- Hardcoded about me content -->
-                                                <div class="row g-gs">
-                                                    <div class="col-lg-6">
-                                                        <div class="small">Designation:</div>
-                                                        <h5 class="small">Software Developer</h5> <!-- Hardcoded designation -->
-                                                    </div><!-- .col -->
-                                                    <div class="col-lg-6">
-                                                        <div class="small">Website:</div>
-                                                        <h5 class="small">www.infinecs.com</h5> <!-- Hardcoded website -->
-                                                    </div><!-- .col -->
-                                                </div><!-- .row -->
+                                        <table class="datatable-init table small-font-datatable" data-nk-container="table-responsive table-border">
+                                            <thead>
+                                                <tr>
+                                                    <th><span class="overline-title">No.</span></th>
+                                                    <th><span class="overline-title">Name</span></th>
+                                                    <th><span class="overline-title">Email</span></th>
+                                                    <th><span class="overline-title">Contact No</span></th>
+                                                    <th><span class="overline-title">Status</span></th>
+                                                    <th><span class="overline-title">Job Type</span></th>
+                                                    <th><span class="overline-title">Date Applied</span></th>
+                                                    <th><span>Action</span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="jobpositionsApplicationsTable">
+                                            @foreach($jobapplicationData as $key => $data)
+                                            @if($data->position_id === $jobDetail->position_id)
+        <tr>
+            <td>{{ $key + 1 }}</td>
+            <td>{{ $data->FirstName }}</td>
+            <td>{{ $data->Email }}</td>
+            <td>{{ $data->ContactNo }}</td>
+            <td>{{ $data->Status }}</td>
+            <td>{{ $data->JobType }}</td>
+            <td>{{ $data->DateCreate }}</td>
+            <td>
+                                            <div class="dropdown d-flex justify-content-center">
+                                                <a href="#" class="btn btn-sm btn-icon btn-zoom" data-bs-toggle="dropdown">
+                                                    <em class="icon ni ni-more-v"></em>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
+                                                    <div class="dropdown-content py-1">
+                                                        <ul class="link-list link-list-hover-bg-primary link-list-md">
+                                                            <li>
+                                                            <a href="/admin/editJobApplication/{{ $data->ApplicationID }}">
+                                                                    <em class="icon ni ni-edit"></em>
+                                                                    <span>Edit</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                            <a href="">
+                                                             <em class="icon ni ni-send"></em>
+                                                                    <span>Send</span>
+                                                                </a>
+                                                                <ul> 
+                                                                <li>
+                                                                    <a data-bs-target="#exampleModal{{ $loop->index }}" data-bs-toggle="modal" class="btn border-0">
+                                                                        <em class="icon ni ni-mail"></em>
+                                                                        Email
+                                                                    </a>
+                                                                </li>
+                                                                
+                                                            </ul>
+                                                            </li>
+                                                            <li>
+                                                            <a href="">
+                                                            <em class="icon ni ni-share"></em>
+                                                                    <span>Share</span>
+                                                                </a>
+                                                                <ul> 
+                                                                <li>
+                                                                    <a href="#">
+                                                                    <em class="icon ni ni-mail"></em>
+                                                                    Share Via Email</a>
+                                                                </li>
+                                                                
+                                                            </ul>
+                                                            </li>
+                                                            <li>
+                                                            <a href="">
+                                                            <em class="icon ni ni-note-add-c"></em>
+                                                                    <span>Request</span>
+                                                                </a>
+                                                                <ul> 
+                                                                <li>
+                                                                    <a href="#">
+                                                                    <em class="icon ni ni-article"></em>
+                                                                    Assessment</a>
+                                                                </li>
+                                                                
+                                                            </ul>
+                                                            </li>
+                                                            <li>
+                                                            <a href="">
+                                                            <em class="icon ni ni-minus-circle"></em>
+                                                                    <span>Drop</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="" onclick="return showDeleteConfirmation(event, this)">
+                                                                    <em class="icon ni ni-trash"></em>
+                                                                    <span>Delete</span>
+                                                                </a>
+                                                            </li>
+                                                            
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div><!-- dropdown -->
+                                        </td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            </div>
+                          
+                            
+                        </div><!-- .card-body -->
                                             </div><!-- .bio-block -->
                                             
                                         </div><!-- .card-body -->
@@ -278,6 +365,7 @@
                         </div>
                         <div class="modal-body">
                 <form id="addNotesForm">
+                @csrf
                     <div class="mb-3">
                         <label for="notesInput" class="form-label">Notes:</label>
                         <div id="notesInputs">
@@ -377,7 +465,36 @@
     </div>
     </div>
     </div>
-
+    @foreach($jobapplicationData as $data)
+<div class="modal fade" id="exampleModal{{ $loop->index }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $loop->index }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel{{ $loop->index }}">Send Email To {{ $data->FirstName }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="emailTo{{ $loop->index }}" class="form-label">To:</label>
+                    <input type="email" class="form-control" id="emailTo{{ $loop->index }}" value="{{ $data->Email }}">
+                </div>
+                <div class="mb-3">
+                    <label for="emailSubject{{ $loop->index }}" class="form-label">Subject:</label>
+                    <input type="text" class="form-control" id="emailSubject{{ $loop->index }}" placeholder="Subject Here">
+                </div>
+                <div class="mb-3">
+                    <label for="emailBody{{ $loop->index }}" class="form-label">Email Body:</label>
+                    <textarea class="form-control" id="emailBody{{ $loop->index }}" rows="3">Dear {{ $data->FirstName }}, </textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="#" onclick="sendEmail('{{ $data->Email }}', '{{ $loop->index }}', document.getElementById('emailSubject{{ $loop->index }}').value); return false;"  class="btn btn-sm btn-primary">Send Email</a>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
 
     <script>
     function saveNotes() {
@@ -414,6 +531,18 @@
         newInput.placeholder = 'Enter note';
         notesInputs.appendChild(newInput);
     }
+
+
+ 
+    function sendEmail(email, index) {
+    var subject = document.getElementById('emailSubject' + index).value;
+    var body = document.getElementById('emailBody' + index).value;
+    var mailtoLink = 'mailto:' + email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    window.location.href = mailtoLink;
+}
+
+
 </script>
      
+
 @endsection

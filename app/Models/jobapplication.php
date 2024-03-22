@@ -44,5 +44,13 @@ class JobApplication extends Model
         'InMY',
         'EPStatus',
         'NoticePeriodNegotiable',
+        'position_id',
     ];
+  
+
+    public function open_positions()
+    {
+        return $this->belongsTo(OpenPositions::class, 'position_id');
+    }
+
 }

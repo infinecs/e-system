@@ -36,11 +36,12 @@
                                         <h6 class="overline-title">Applications</h6>
                                     </li>
                                     <li class="nk-menu-item">
-                                        <a href="/admin/job" class="nk-menu-link">
-                                            <span class="nk-menu-icon"><em class="icon ni ni-coin-alt"></em></span>
-                                            <span class="nk-menu-text">Job</span>
-                                        </a>
+                                                <a href="/admin/OpenPositions" class="nk-menu-link">
+                                                <span class="nk-menu-icon"><em class="icon ni ni-briefcase"></em></span>
+                                                    <span class="nk-menu-text">Candidates</span>
+                                                </a>
                                             </li>
+                                            
                                     <li class="nk-menu-item">
                                         <a href="/admin/jobApplication" class="nk-menu-link">
                                             <span class="nk-menu-icon"><em class="icon ni ni-user-list"></em></span>
@@ -71,12 +72,6 @@
                                                 <a href="/admin/userList" class="nk-menu-link">
                                                 <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                                                     <span class="nk-menu-text">Users Management</span>
-                                                </a>
-                                            </li>
-                                            <li class="nk-menu-item">
-                                                <a href="/admin/OpenPositions" class="nk-menu-link">
-                                                <span class="nk-menu-icon"><em class="icon ni ni-briefcase"></em></span>
-                                                    <span class="nk-menu-text">Job Position</span>
                                                 </a>
                                             </li>
                                             <li class="nk-menu-item">

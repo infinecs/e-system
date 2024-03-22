@@ -164,7 +164,7 @@
                                                 @foreach($jobapplicationData as $key => $Data)
                                                 <tr>
                                                     <td>{{ $key + 1 }}</td>
-                                                    <td>{{$Data->FirstName}}</td>
+                                                    <td><a style="font-weight:bold;" href="admin/applicationView/{{ $Data->ApplicationID }}">{{$Data->FirstName}}</td>
                                                     <td>{{$Data->Email}}</td>
                                                     <td>{{$Data->ContactNo}}</td>
                                                     <td>{{$Data->PositionApplied}}</td>

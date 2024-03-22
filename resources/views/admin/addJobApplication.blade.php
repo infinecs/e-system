@@ -64,7 +64,12 @@
                                                 <div class="col-lg-6">
                                                     <div class="form-group">
                                                         <label class="form-label">Position Applied</label>
-                                                        <input type="text" class="form-control" placeholder="Position" name="PositionApplied" value="{{ old('PositionApplied') }}">
+                                                        <select class="form-control" name="PositionApplied">
+                                                            <option value="">Select Position</option>
+                                                            @foreach($positions as $id => $positionName)
+                                                                <option value="{{ $id }}" {{ old('PositionApplied', $jobApplication->position_id) == $id ? 'selected' : '' }}>{{ $positionName }}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">

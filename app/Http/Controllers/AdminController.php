@@ -22,6 +22,7 @@ use App\Models\department;
 use App\Models\JobDescription;
 use App\Models\JobDetail;
 use App\Models\JobRequirement;
+use App\Models\Note;
 use Carbon\Carbon;
 Use Alert;
 
@@ -278,17 +279,54 @@ class AdminController extends Controller
 
     }
 
-    public function job()
-    {
-        $user = Auth::user();
-        $jobDetail = JobDetail::first(); // Fetching a specific job detail, you might want to adjust this query to fetch the correct one
-    
-        // Fetching descriptions and requirements related to this job detail
-        $descriptions = JobDescription::where('job_id', $jobDetail->id)->get();
-        $requirements = JobRequirement::where('job_id', $jobDetail->id)->get();
-    
-        return view('admin.job', compact('user', 'jobDetail', 'descriptions', 'requirements'));
+
+
+    public function applicationView($ApplicationID)
+{
+    // Retrieve the authenticated user
+    $user = Auth::user();
+
+    // Retrieve the application based on the provided ID
+    $jobApplication = JobApplication::find($ApplicationID);
+
+    // Check if the application exists
+    if (!$jobApplication) {
+        abort(404); // If the application doesn't exist, return a 404 response
     }
+
+    // Pass the application and the authenticated user to the view
+    return view('admin/applicationView', ['jobApplication' => $jobApplication, 'user' => $user]);
+}
+
+public function job($id = null)
+{
+    $user = Auth::user();
+
+    // Fetch job detail by ID if provided, otherwise fetch the first one
+    $jobDetail = $id ? JobDetail::find($id) : JobDetail::first();
+
+    // Fetching descriptions and requirements related to this job detail
+    $descriptions = JobDescription::where('job_id', $jobDetail->id)->get();
+    $requirements = JobRequirement::where('job_id', $jobDetail->id)->get();
+
+    $jobapplicationData = JobApplication::where('position_id', $jobDetail->position_id)->get();
+
+    $positions = OpenPositions::join('departments', 'departments.id', '=', 'open_positions.department_id')
+        ->join('job_details', 'open_positions.id', '=', 'job_details.position_id')
+        ->select('open_positions.position_name as open_position_name', 'departments.name as department_name', 'job_details.*', 'open_positions.status')
+        ->get();
+
+    // If no job detail found, you might want to handle this case accordingly
+    // For example, you could redirect to an error page or display a message
+    if (!$jobDetail) {
+        // Handle the case when no job detail is found
+    }
+
+    // Pass the fetched data to the view
+    return view('admin.job', compact('user', 'jobDetail', 'descriptions','jobapplicationData', 'positions', 'requirements'));
+}
+
+
 
     public function showNotes()
 {
@@ -416,11 +454,15 @@ public function editDepartment(Request $request)
       }
  }
 
-    public function OpenPositions()
+ public function OpenPositions()
 {
     $user = Auth::user(); // Fetch authenticated user
-    $OpenPositions = OpenPositions::all(); // Fetch all open positions
-    return view('admin/OpenPositions', ['OpenPositions' => $OpenPositions, 'user' => $user]);
+    $positions = OpenPositions::join('departments', 'departments.id', '=', 'open_positions.department_id')
+        ->join('job_details', 'open_positions.id', '=', 'job_details.position_id')
+        ->select('open_positions.position_name as open_position_name', 'departments.name as department_name', 'job_details.*','open_positions.created_at','open_positions.status')
+        ->get();
+    
+    return view('admin/OpenPositions', ['positions' => $positions, 'user' => $user]);
 }
 
 
@@ -658,59 +700,64 @@ public function getApplicationDetails($applicationId)
 
 
     public function addJobApplication()
-{
-    $user = Auth::user();
-    $userData = User::where('id', '!=', Auth::user()->id)->get();
-    $jobApplication = new JobApplication(); // Assuming you're creating a new JobApplication object
-    return view('admin/addJobApplication', ['user' => $user, 'userData' => $userData, 'jobApplication' => $jobApplication]);
-}
+    {
+        $user = Auth::user();
+        $userData = User::where('id', '!=', Auth::user()->id)->get();
+        $positions = OpenPositions::pluck('position_name', 'id');
+        $jobApplication = new JobApplication(); // Assuming you're creating a new JobApplication object
+    
+        return view('admin.addJobApplication', compact('user', 'userData', 'positions', 'jobApplication'));
+    }
+    
     
 
-        public function applicationStore(Request $request)
-        {
-            $user = Auth::user();
-    $userData = User::where('id', '!=', Auth::user()->id)->get();
-            // Validate the incoming request data
-            $validatedData = $request->validate([
-                'FirstName' => 'required|string|max:255',
-                'LastName' => 'required|string|max:255',
-                'Nationality' => 'required|string|max:255',
-                'Email' => 'required|email|max:255',
-                'ContactNo' => 'required|string|max:20',
-                'PositionApplied' => 'required|string|max:255',
-                'JobType' => 'required|string|in:Experienced,FreshGraduate,Internship',
-                'DateCreate' => 'required|date',
-                'FieldOfStudy' => 'required|string',
-                'UniversityInstitute' => 'required|string',
-                'Qualification' => 'required|string',
-            ]);
-        
-            // Create a new job application record
-            $jobApplication = new JobApplication();
-            $jobApplication->FirstName = $validatedData['FirstName'];
-            $jobApplication->LastName = $validatedData['LastName'];
-            $jobApplication->Nationality = $validatedData['Nationality'];
-            $jobApplication->Email = $validatedData['Email'];
-            $jobApplication->ContactNo = $validatedData['ContactNo'];
-            $jobApplication->PositionApplied = $validatedData['PositionApplied'];
-            $jobApplication->JobType = $validatedData['JobType'];
-            $jobApplication->DateCreate = $validatedData['DateCreate'];
-            $jobApplication->FieldOfStudy = $validatedData['FieldOfStudy'];
-            $jobApplication->UniversityInstitute = $validatedData['UniversityInstitute'];
-            $jobApplication->Qualification = $validatedData['Qualification'];
-        
-            // Save the job application
-            if ($jobApplication->save()) {
-                // Job application saved successfully
-                toast('Job Application Added!', 'success');
-            } else {
-                // Failed to save job application
-                toast('Failed to add job application!', 'error');
-            }
-        
-            // Redirect back to the form page
-            return redirect()->back();
+    public function applicationStore(Request $request)
+    {
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'FirstName' => 'required|string|max:255',
+            'LastName' => 'required|string|max:255',
+            'Nationality' => 'required|string|max:255',
+            'Email' => 'required|email|max:255',
+            'ContactNo' => 'required|string|max:20',
+            'PositionApplied' => 'required|exists:open_positions,id', // Validation to ensure the selected position exists in the open_positions table
+            'JobType' => 'required|string|in:Experienced,FreshGraduate,Internship',
+            'DateCreate' => 'required|date',
+            'FieldOfStudy' => 'required|string',
+            'UniversityInstitute' => 'required|string',
+            'Qualification' => 'required|string',
+        ]);
+    
+        // Get the position name based on the selected position ID
+        $positionName = OpenPositions::where('id', $validatedData['PositionApplied'])->value('position_name');
+    
+        // Create a new job application record
+        $jobApplication = new JobApplication();
+        $jobApplication->FirstName = $validatedData['FirstName'];
+        $jobApplication->LastName = $validatedData['LastName'];
+        $jobApplication->Nationality = $validatedData['Nationality'];
+        $jobApplication->Email = $validatedData['Email'];
+        $jobApplication->ContactNo = $validatedData['ContactNo'];
+        $jobApplication->PositionApplied = $positionName; // Save the position name
+        $jobApplication->position_id = $validatedData['PositionApplied']; // Save the position ID
+        $jobApplication->JobType = $validatedData['JobType'];
+        $jobApplication->DateCreate = $validatedData['DateCreate'];
+        $jobApplication->FieldOfStudy = $validatedData['FieldOfStudy'];
+        $jobApplication->UniversityInstitute = $validatedData['UniversityInstitute'];
+        $jobApplication->Qualification = $validatedData['Qualification'];
+    
+        // Save the job application
+        if ($jobApplication->save()) {
+            // Job application saved successfully
+            toast('Job Application Added!', 'success');
+        } else {
+            // Failed to save job application
+            toast('Failed to add job application!', 'error');
         }
+    
+        // Redirect back to the form page
+        return redirect()->back();
+    }
 
 public function applicationDelete($ApplicationID)
 {
@@ -736,20 +783,21 @@ public function showEditForm($ApplicationID)
     $user = Auth::user();
     // Find the job application by ID
     $application = JobApplication::findOrFail($ApplicationID);
+    $positions = OpenPositions::pluck('position_name', 'id');
+    
 
     // Pass the job application data to the view
-    return view('admin.editJobApplication', ['user' => $user,'application' => $application]);
+    return view('admin.editJobApplication', ['user' => $user, 'application' => $application, 'positions' => $positions]);
 }
 
 public function editJobApplication(Request $request)
 {
     // Validate the incoming request data
-    $request->validate([
+    $validatedData = $request->validate([
         'FirstName' => 'required|string|max:255',
         'LastName' => 'required|string|max:255',
         'Email' => 'required|email|max:255',
         'ContactNo' => 'required|string|max:20',
-        'PositionApplied' => 'required|string|max:255',
         'JobType' => 'required|string|in:Experienced,FreshGraduate,Internship',
         'Nationality' => 'required|string|max:255',
         'DateCreate' => 'required|date_format:Y-m-d',
@@ -757,12 +805,12 @@ public function editJobApplication(Request $request)
         'UniversityInstitute' => 'required|string',
         'Qualification' => 'required|string',
         'UploadResume' => 'file|mimes:pdf|max:2048',
+        'PositionApplied' => 'required|exists:open_positions,id', // Validation for PositionApplied
         // Add validation rules for other fields as needed
     ]);
-
+    $positions = OpenPositions::where('id', $validatedData['PositionApplied'])->value('position_name');
     // Retrieve the job application instance from the database
     $jobApplication = JobApplication::findOrFail($request->input('ApplicationID'));
-
 
     // Handle file upload
     if ($request->hasFile('UploadResume')) {
@@ -777,13 +825,13 @@ public function editJobApplication(Request $request)
     }
 
     // Update the job application with the new data
-    
     $jobApplication->update([
         'FirstName' => $request->input('FirstName'),
         'LastName' => $request->input('LastName'),
         'Email' => $request->input('Email'),
         'ContactNo' => $request->input('ContactNo'),
-        'PositionApplied' => $request->input('PositionApplied'),
+        'PositionApplied' => $positions,
+        'position_id' => $request->input('PositionApplied'),
         'JobType' => $request->input('JobType'),
         'Nationality' => $request->input('Nationality'),
         'DateCreate' => $request->input('DateCreate'),
@@ -801,9 +849,9 @@ public function editJobApplication(Request $request)
         toast('Failed to update job application.', 'error');
     }
 
-    return redirect()->route('showEditForm', ['ApplicationID' => $jobApplication->ApplicationID]);
-
+    return redirect()->route('showEditForm', ['ApplicationID' => $jobApplication->ApplicationID, ]);
 }
+
 
 
 

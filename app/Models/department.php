@@ -15,5 +15,6 @@ class Department extends Model
         'name',
         'status',
         'id',
+        'department_id',
     ];
 }

@@ -63,7 +63,14 @@
 <div class="col-lg-6">
     <div class="form-group">
         <label class="form-label">Position Applied</label>
-        <input type="text" class="form-control" placeholder="Position" name="PositionApplied" value="{{ $application->PositionApplied }}">
+        <select class="form-control" name="PositionApplied">
+            <option value="">Select Position</option>
+            @foreach($positions as $id => $positionName)
+                <option value="{{ $id }}" {{ $application->position_id == $id ? 'selected' : '' }}>
+                    {{ $positionName }}
+                </option>
+            @endforeach
+        </select>
     </div>
 </div>
 <div class="col-lg-6">
@@ -146,7 +153,7 @@
                                             <button type="submit" class="btn btn-primary">Update Job Application</button>
                                         </li>
                                         <li>
-                                            <a href="/admin/jobApplication" class="btn border-0">Cancel</a>
+                                        <a href="javascript:history.go(-1);" class="btn border-0">Cancel</a>
                                         </li>
                                     </ul>
                                 </div>

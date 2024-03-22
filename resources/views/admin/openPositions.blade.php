@@ -7,14 +7,13 @@
                 <div class="nk-block-head nk-page-head">
                 <div class="nk-block-head-between flex-wrap gap g-2">
                     <div class="nk-block-head-content">
-                        <h1 class="nk-block-title">Job Position</h1>
+                        <h1 class="nk-block-title">Candidates</h1>
                         <div>
                             
                         <nav>
                             <ol class="breadcrumb breadcrumb-arrow mb-0">
                                 <li class="breadcrumb-item"><a href="/admin/index">Home</a></li>
-                                <li class="breadcrumb-item"><a href="#">Settings</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Job Position</li>
+                                <li class="breadcrumb-item active" aria-current="page">Candidates</li>
                             </ol>
                         </nav>
                     </div>
@@ -30,7 +29,7 @@
                                 <li>
                                     <a href="admin/addOpenPositions" class="btn btn-primary d-none d-md-inline-flex">
                                         <em class="icon ni ni-plus"></em>
-                                        <span>Add Open Positions</span>
+                                        <span>Add Job Positions</span>
                                     </a>
                                 </li>
                             </ul>
@@ -47,17 +46,20 @@
                                                 <tr>
                                                     <th><span class="overline-title">No.</span></th>
                                                     <th><span class="overline-title">Position Name</span></th>
-                                                    <th><span class="overline-title">Job Discription</span></th>
-                                                    <th><span class="overline-title">Status</span></th>
+                                                    <th><span class="overline-title">Job Department</span></th>
+                                                    <th><span class="overline-title">Job Location</span></th>
+                                                    <th><span class="overline-title">Job Status</span></th>
+                                                    <th><span class="overline-title">Create Date</span></th>
                                                     <th style="text-align: center;"><span class="overline-title">Action</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-    @foreach($OpenPositions as $key => $position)
+    @foreach($positions as $key => $position)
     <tr>
         <td>{{ $key + 1 }}</td>
-        <td>{{ $position->position_name }}</td>
-        <td>{{ $position->job_description }}</td>
+        <td><a style="font-weight:bold;" href="admin/job/{{ $position->id }}">{{ $position->position_name }}</a></td>
+        <td>{{ $position->department_name }}</td>
+        <td>{{ $position->office_address }}</td>
         <td>
         @if($position->status == 1)
             <span class="badge text-bg-success-soft">Active</span>
@@ -65,6 +67,7 @@
             <span class="badge text-bg-danger-soft">Deactive</span> 
         @endif
     </td>
+    <td>{{ $position->created_at }}</td>
         <td>
             <div class="dropdown d-flex justify-content-center">
                 <a href="#" class="btn btn-sm btn-icon btn-zoom" data-bs-toggle="dropdown">
