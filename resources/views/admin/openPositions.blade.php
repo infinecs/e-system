@@ -57,7 +57,7 @@
     @foreach($positions as $key => $position)
     <tr>
         <td>{{ $key + 1 }}</td>
-        <td><a style="font-weight:bold;" href="admin/job/{{ $position->id }}">{{ $position->position_name }}</a></td>
+        <td><a style="font-weight:bold;" href="/admin/job/{{ $position->id }}">{{ $position->position_name }}</a></td>
         <td>{{ $position->department_name }}</td>
         <td>{{ $position->office_address }}</td>
         <td>
@@ -77,10 +77,10 @@
                     <div class="dropdown-content py-1">
                         <ul class="link-list link-list-hover-bg-primary link-list-md">
                             <li>
-                                <a href="/admin/editPositions/{{ $position->id }}"><em class="icon ni ni-edit"></em><span>Edit</span></a>
+                            <a href="/admin/editPositions/{{ $position->position_id }}"><em class="icon ni ni-edit"></em><span>Edit</span></a>
                             </li>
                             <li>
-                                <a href="/admin/PositionsDelete/{{ $position->id }}" onclick="return showDeleteConfirmation(event, this)">
+                                <a href="/admin/PositionsDelete/{{ $position->position_id }}" onclick="return showDeleteConfirmation(event, this)">
                                     <em class="icon ni ni-trash"></em>
                                     <span>Delete</span>
                                 </a>

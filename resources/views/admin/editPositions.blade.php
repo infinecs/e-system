@@ -10,8 +10,8 @@
                             <h2 class="nk-block-title">Edit Job Position</h2>
                             <nav>
                                 <ol class="breadcrumb breadcrumb-arrow mb-0">
-                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Job Position</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin/index">Home</a></li>
+                                    <li class="breadcrumb-item"><a href="/admin/OpenPositions">Candidates</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Edit Job Position</li>
                                 </ol>
                             </nav>

@@ -534,15 +534,16 @@ public function PositionsDelete ($id)
 
 
 
-public function showEditPositionsForm($id)
-{
-    $user = Auth::user();
-    // Find the job application by ID
-    $OpenPositions = OpenPositions::findOrFail($id);
-
-    // Pass the job application data to the view
-    return view('admin.editPositions', ['user' => $user,'OpenPositions' => $OpenPositions]);
-}
+ public function showEditPositionsForm($id)
+ {
+     
+     $user = Auth::user();
+     // Find the job application by ID
+     $OpenPositions = OpenPositions::findOrFail($id);
+ 
+     // Pass the job application data to the view
+     return view('admin.editPositions', ['user' => $user,'OpenPositions' => $OpenPositions]);
+ }
 
 
 
